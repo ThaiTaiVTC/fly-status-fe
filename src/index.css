@@ -165,7 +165,7 @@
 @layer components {
   /* Metric Card Styles */
   .metric-card {
-    @apply bg-card border border-border rounded-xl p-6 shadow-sm hover:shadow-md transition-all duration-300;
+    @apply bg-card border border-border rounded-xl p-3 shadow-sm hover:shadow-md transition-all duration-300;
   }
 
   .metric-value {

@@ -8,13 +8,9 @@ export function BottomNavigation() {
       <div className="flex justify-around items-center py-2 px-2 sm:px-4 max-w-screen-sm mx-auto">
         <NavigationItem to="/" icon={LayoutDashboard} label="Tổng quan" />
         <NavigationItem to="/statistics" icon={BarChart3} label="Thống kê" />
-        {/* <NavigationItem
-          to="/realtime"
-          icon={Radio}
-          label="Real-time"
-        /> */}
-        {/* <NavigationItem to="/comparison" icon={TrendingUp} label="So sánh" /> */}
-        {/* <NavigationItem to="/alerts" icon={Bell} label="Cảnh báo" /> */}
+        <NavigationItem to="/realtime" icon={Radio} label="Real-time" />
+        <NavigationItem to="/comparison" icon={TrendingUp} label="So sánh" />
+        <NavigationItem to="/alerts" icon={Bell} label="Cảnh báo" />
         <NavigationItem to="/account" icon={User} label="Tài khoản" />
       </div>
     </nav>
