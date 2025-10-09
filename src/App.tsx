@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -5,6 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/context/AuthContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
+import { StatusBar, Style } from "@capacitor/status-bar";
 
 // Pages
 import LoginPage from "./pages/LoginPage";
@@ -12,10 +14,30 @@ import OverviewPage from "./pages/OverviewPage";
 import StatisticsPage from "./pages/StatisticsPage";
 import AccountPage from "./pages/AccountPage";
 import NotFound from "./pages/NotFound";
+import FlightDetailsPage from "./pages/FlightDetailsPage";
+import AlertsPage from "./pages/AlertsPage";
+import RealtimeMonitoringPage from "./pages/RealtimeMonitoringPage";
+import ComparisonPage from "./pages/ComparisonPage";
 
 const queryClient = new QueryClient();
 
-const App = () => (
+const App = () => {
+  useEffect(() => {
+    // Configure status bar for mobile
+    const configureStatusBar = async () => {
+      try {
+        await StatusBar.setStyle({ style: Style.Light });
+        await StatusBar.setBackgroundColor({ color: '#ffffff' });
+      } catch (error) {
+        // Status bar not available on web
+        console.log('Status bar not available');
+      }
+    };
+
+    configureStatusBar();
+  }, []);
+
+  return (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
@@ -41,6 +63,38 @@ const App = () => (
               } 
             />
             <Route 
+              path="/realtime" 
+              element={
+                <ProtectedRoute>
+                  <RealtimeMonitoringPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/comparison" 
+              element={
+                <ProtectedRoute>
+                  <ComparisonPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/alerts" 
+              element={
+                <ProtectedRoute>
+                  <AlertsPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/flights/:id" 
+              element={
+                <ProtectedRoute>
+                  <FlightDetailsPage />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
               path="/account" 
               element={
                 <ProtectedRoute>
@@ -55,6 +109,7 @@ const App = () => (
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
-);
+  );
+};
 
 export default App;

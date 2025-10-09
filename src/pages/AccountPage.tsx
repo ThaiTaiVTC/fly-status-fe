@@ -1,12 +1,12 @@
-import React from "react";
-import { Header } from "@/components/organisms/Header";
-import { BottomNavigation } from "@/components/organisms/BottomNavigation";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/atoms/Card";
-import { Button } from "@/components/atoms/Button";
-import { Badge } from "@/components/atoms/Badge";
-import { Avatar, AvatarFallback } from "@/components/atoms/Avatar";
-import { useAuth } from "@/context/AuthContext";
-import { Settings, LogOut, Mail, Phone, IdCard, Clock, Shield } from "lucide-react";
+import React from 'react';
+import { Header } from '@/components/organisms/Header';
+import { BottomNavigation } from '@/components/organisms/BottomNavigation';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/atoms/Card';
+import { Button } from '@/components/atoms/Button';
+import { Badge } from '@/components/atoms/Badge';
+import { Avatar, AvatarFallback } from '@/components/atoms/Avatar';
+import { useAuth } from '@/context/AuthContext';
+import { Settings, LogOut, Mail, Phone, IdCard, Clock, Shield } from 'lucide-react';
 
 export default function AccountPage() {
   const { user, logout } = useAuth();
@@ -18,9 +18,9 @@ export default function AccountPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-20 pt-24">
+    <div className="min-h-screen bg-background pb-20">
       <Header />
-
+      
       <main className="container mx-auto px-6 py-8 space-y-8">
         {/* Profile Section */}
         <Card>
@@ -28,10 +28,7 @@ export default function AccountPage() {
             <div className="flex items-center space-x-4 mb-6">
               <Avatar className="h-16 w-16">
                 <AvatarFallback className="text-lg">
-                  {user.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
+                  {user.name.split(' ').map(n => n[0]).join('')}
                 </AvatarFallback>
               </Avatar>
               <div>
@@ -39,7 +36,7 @@ export default function AccountPage() {
                 <p className="text-muted-foreground">{user.role}</p>
                 <Badge variant="success" className="mt-2">
                   <Shield className="h-3 w-3 mr-1" />
-                  {user.status === "verified" ? "Đã xác thực" : user.status}
+                  {user.status === 'verified' ? 'Đã xác thực' : user.status}
                 </Badge>
               </div>
             </div>
@@ -59,7 +56,7 @@ export default function AccountPage() {
                 <p className="font-medium">{user.email}</p>
               </div>
             </div>
-
+            
             <div className="flex items-center space-x-3 py-2">
               <Phone className="h-4 w-4 text-muted-foreground" />
               <div>
@@ -67,7 +64,7 @@ export default function AccountPage() {
                 <p className="font-medium">{user.phone}</p>
               </div>
             </div>
-
+            
             <div className="flex items-center space-x-3 py-2">
               <IdCard className="h-4 w-4 text-muted-foreground" />
               <div>
@@ -84,12 +81,19 @@ export default function AccountPage() {
             <CardTitle>Thao tác</CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <Button variant="outline" className="w-full justify-start">
+            <Button 
+              variant="outline" 
+              className="w-full justify-start"
+            >
               <Settings className="h-4 w-4 mr-2" />
               Cài đặt tài khoản
             </Button>
-
-            <Button variant="danger" className="w-full justify-start" onClick={handleLogout}>
+            
+            <Button 
+              variant="danger" 
+              className="w-full justify-start"
+              onClick={handleLogout}
+            >
               <LogOut className="h-4 w-4 mr-2" />
               Đăng xuất
             </Button>
@@ -106,7 +110,7 @@ export default function AccountPage() {
               <span className="text-sm text-muted-foreground">Phiên đăng nhập</span>
               <Badge variant="success">Hoạt động</Badge>
             </div>
-
+            
             <div className="flex justify-between items-center py-2">
               <span className="text-sm text-muted-foreground">Lần cuối truy cập</span>
               <div className="text-right">
@@ -114,7 +118,7 @@ export default function AccountPage() {
                 <p className="text-xs text-muted-foreground mt-1">Hôm nay</p>
               </div>
             </div>
-
+            
             <div className="flex justify-between items-center py-2">
               <span className="text-sm text-muted-foreground">Quyền truy cập</span>
               <Badge variant="warning">Toàn quyền</Badge>

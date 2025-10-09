@@ -52,3 +52,46 @@ export interface RouteData {
   flights: number;
   passengers: number;
 }
+
+export interface FlightDetail {
+  id: string;
+  flightNumber: string;
+  aircraft: string;
+  route: string;
+  departure: string;
+  arrival: string;
+  status: 'active' | 'completed' | 'scheduled';
+  passengers: number;
+  connectedDevices: number;
+  bandwidth: number;
+  quality: 'excellent' | 'good' | 'fair' | 'poor';
+  downtime: number;
+  complaints: number;
+}
+
+export interface Alert {
+  id: string;
+  type: 'error' | 'warning' | 'info';
+  title: string;
+  message: string;
+  flightNumber?: string;
+  timestamp: string;
+  status: 'active' | 'resolved';
+}
+
+export interface Device {
+  id: string;
+  type: 'phone' | 'tablet' | 'laptop';
+  os: string;
+  bandwidth: number;
+  duration: number;
+  package: string;
+}
+
+export interface FilterOptions {
+  dateRange?: { start: Date; end: Date };
+  route?: string;
+  aircraft?: string;
+  servicePackage?: string;
+  status?: string;
+}

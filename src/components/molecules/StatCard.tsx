@@ -11,11 +11,11 @@ interface StatCardProps {
 
 export function StatCard({ label, value, className, valueClassName }: StatCardProps) {
   return (
-    <Card className={cn('p-4', className)}>
+    <Card className={cn('p-5', className)}>
       <CardContent className="p-0">
         <div className="flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">{label}</span>
-          <span className={cn('font-semibold', valueClassName)}>{value}</span>
+          <span className="text-base text-muted-foreground font-medium">{label}</span>
+          <span className={cn('text-2xl font-bold', valueClassName)}>{value}</span>
         </div>
       </CardContent>
     </Card>

@@ -143,6 +143,23 @@
   body {
     @apply bg-background text-foreground font-sans;
   }
+
+  /* Capacitor Safe Area Support */
+  .safe-area-top {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .safe-area-left {
+    padding-left: env(safe-area-inset-left);
+  }
+
+  .safe-area-right {
+    padding-right: env(safe-area-inset-right);
+  }
 }
 
 @layer components {
@@ -188,5 +205,24 @@
 
   .nav-item-inactive {
     @apply text-muted-foreground hover:text-primary hover:bg-primary/10;
+  }
+
+  /* Mobile Date Picker */
+  .mobile-date-picker {
+    @apply max-w-full;
+  }
+
+  @media (max-width: 640px) {
+    .mobile-date-picker .ant-picker-panel-container {
+      @apply !scale-90 origin-top-left;
+    }
+
+    .mobile-date-picker .ant-picker-panel {
+      @apply !min-w-0;
+    }
+
+    .mobile-date-picker .ant-picker-panels {
+      @apply !flex-col;
+    }
   }
 }
