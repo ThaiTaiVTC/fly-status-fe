@@ -8,14 +8,13 @@ import { toast } from "@/hooks/use-toast";
 
 export default function OverviewPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5 pb-20 relative overflow-hidden">
-      {/* Decorative background elements */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2" />
-      <div className="absolute bottom-1/4 left-0 w-64 h-64 bg-secondary/5 rounded-full blur-3xl -translate-x-1/2" />
+    <div className="min-h-screen bg-gradient-to-br from-primary via-primary-hover to-blue-900 pb-20 relative overflow-hidden border-none">
+      {/* Top White Background - covers Header and FilterBar */}
+      <div className="absolute top-0 left-0 right-0 h-[16%] bg-white rounded-b-[3rem]" />
 
-      <Header />
+      <Header title="Tổng quan thông tin " />
 
-      <main className="container mx-auto px-3 sm:px-6 py-6 sm:py-10 space-y-6 sm:space-y-10 relative z-10">
+      <main className="container border-none mx-auto px-3 sm:px-6 py-6 sm:py-10 space-y-6 sm:space-y-10 relative z-10">
         {/* Filter Bar with animation */}
         <div className="animate-fade-in">
           <FilterBar />

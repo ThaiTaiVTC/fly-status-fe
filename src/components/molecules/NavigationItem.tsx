@@ -1,6 +1,6 @@
-import { NavLink, useLocation } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import { LucideIcon } from 'lucide-react';
+import { NavLink, useLocation } from "react-router-dom";
+import { cn } from "@/lib/utils";
+import { LucideIcon } from "lucide-react";
 
 interface NavigationItemProps {
   to: string;
@@ -14,16 +14,10 @@ export function NavigationItem({ to, icon: Icon, label, className }: NavigationI
   const isActive = location.pathname === to;
 
   return (
-    <NavLink
-      to={to}
-      className={cn(
-        'nav-item min-w-[60px] sm:min-w-[80px]',
-        isActive ? 'nav-item-active' : 'nav-item-inactive',
-        className
-      )}
-    >
-      <Icon className="h-5 w-5 sm:h-6 sm:w-6 mb-0.5 sm:mb-1" />
-      <span className="text-[10px] sm:text-xs font-medium truncate max-w-full">{label}</span>
+    <NavLink to={to} className={cn("flex items-center justify-center transition-all duration-300", isActive ? "text-white scale-110" : "text-white/70 hover:text-white hover:scale-105", className)} title={label}>
+      <div className={cn("p-2.5 rounded-full transition-all duration-300", isActive && "bg-white/20")}>
+        <Icon className="h-8 w-8" strokeWidth={2.5} />
+      </div>
     </NavLink>
   );
 }

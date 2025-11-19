@@ -53,7 +53,7 @@ const metricsData = [
 
 export function MetricsGrid() {
   return (
-    <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
       {metricsData.map((metric, index) => (
         <MetricCard key={index} title={metric.title} value={metric.value} change={metric.change} subtitle={metric.subtitle} icon={metric.icon} type={metric.type} />
       ))}

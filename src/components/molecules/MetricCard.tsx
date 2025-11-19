@@ -1,5 +1,4 @@
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/atoms/Card";
-import { Badge } from "@/components/atoms/Badge";
+import { Card, CardContent } from "@/components/atoms/Card";
 import { cn } from "@/lib/utils";
 import { TrendingUp, TrendingDown, AlertTriangle, Plane, Users, DollarSign, Clock, Wifi, Activity } from "lucide-react";
 
@@ -25,14 +24,52 @@ interface MetricCardProps {
 export function MetricCard({ title, value, change, subtitle, icon, type, className }: MetricCardProps) {
   const IconComponent = iconMap[icon];
 
+  const getIconBackground = (iconType: keyof typeof iconMap) => {
+    switch (iconType) {
+      case "plane":
+        return "bg-blue-100";
+      case "users":
+        return "bg-cyan-100";
+      case "dollar":
+        return "bg-yellow-100";
+      case "clock":
+        return "bg-pink-100";
+      case "wifi":
+        return "bg-purple-100";
+      case "activity":
+        return "bg-green-100";
+      default:
+        return "bg-blue-100";
+    }
+  };
+
+  const getIconColor = (iconType: keyof typeof iconMap) => {
+    switch (iconType) {
+      case "plane":
+        return "text-blue-500";
+      case "users":
+        return "text-cyan-500";
+      case "dollar":
+        return "text-yellow-500";
+      case "clock":
+        return "text-pink-500";
+      case "wifi":
+        return "text-purple-500";
+      case "activity":
+        return "text-green-500";
+      default:
+        return "text-blue-500";
+    }
+  };
+
   const getChangeColor = (type: string) => {
     switch (type) {
       case "increase":
-        return "metric-change-positive";
+        return "text-green-500";
       case "decrease":
-        return "metric-change-negative";
+        return "text-red-500";
       case "warning":
-        return "metric-change-warning";
+        return "text-yellow-500";
       default:
         return "text-muted-foreground";
     }
@@ -54,28 +91,33 @@ export function MetricCard({ title, value, change, subtitle, icon, type, classNa
   const ChangeIconComponent = getChangeIcon(type);
 
   return (
-    <Card className={cn("relative overflow-hidden", className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2  sm:px-4 pt-4 sm:pt-4">
-        <CardTitle className="text-sm sm:text-sm font-semibold">{title}</CardTitle>
-        <div className="p-2 sm:p-2 bg-primary/10 rounded-lg">
-          <IconComponent className="h-4 w-4 sm:h-4 sm:w-4 text-primary" />
-        </div>
-      </CardHeader>
-      <CardContent className=" sm:px-4 pb-4 sm:pb-4">
-        <div className="space-y-2 sm:space-y-2">
-          <div className="metric-value text-3xl sm:text-2xl font-bold">{value}</div>
-          <div className="flex items-center justify-between">
-            <div className={cn("flex items-center space-x-1", getChangeColor(type))}>
-              <ChangeIconComponent className="h-4 w-4" />
-              <span className="text-sm sm:text-sm font-semibold">
-                {change > 0 ? "+" : ""}
-                {change}%
-              </span>
+    <div className={cn("p-2.5 bg-gradient-to-br from-gray-100/60 to-gray-50/40 rounded-[1.75rem]", className)}>
+      <Card className="bg-white shadow-sm hover:shadow-md transition-all duration-300 border-0 rounded-3xl overflow-hidden">
+        <CardContent className="p-4">
+          {/* Header row: title and icon */}
+          <div className="flex items-start justify-between mb-3">
+            <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
+            <div className={cn("w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0", getIconBackground(icon))}>
+              <IconComponent className={cn("h-4 w-4", getIconColor(icon))} />
             </div>
           </div>
-          <p className="text-xs sm:text-xs text-muted-foreground">{subtitle}</p>
-        </div>
-      </CardContent>
-    </Card>
+
+          {/* Value and subtitle */}
+          <div className="space-y-0.5 flex items-center justify-between">
+            <div className="text-2xl font-bold text-gray-900">{value}</div>
+            <p className=" text-gray-400">{subtitle}</p>
+          </div>
+
+          {/* Change indicator */}
+          {/* <div className={cn("flex items-center space-x-1 text-xs font-semibold mt-2", getChangeColor(type))}>
+            <ChangeIconComponent className="h-3.5 w-3.5" />
+            <span>
+              {change > 0 ? "+" : ""}
+              {change}%
+            </span>
+          </div> */}
+        </CardContent>
+      </Card>
+    </div>
   );
 }
