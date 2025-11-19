@@ -1,142 +1,153 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/atoms/Card";
 import { Badge } from "@/components/atoms/Badge";
 import { Button } from "@/components/atoms/Button";
-import { Plane, Users, Wifi, Activity, TrendingUp, Navigation, Eye } from "lucide-react";
+import { Plane, Clock, MapPin, Eye, Search } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { BottomNavigation } from "@/components/organisms/BottomNavigation";
 
-interface ActiveFlight {
+interface Flight {
   id: string;
   flightNumber: string;
-  route: string;
+  departure: string;
+  destination: string;
+  departureTime: string;
+  arrivalTime: string;
   aircraft: string;
+  status: "scheduled" | "boarding" | "departed" | "arrived" | "cancelled" | "delayed";
+  gate: string;
   passengers: number;
-  connectedDevices: number;
-  bandwidth: number;
-  quality: "excellent" | "good" | "fair" | "poor";
-  altitude: string;
-  speed: string;
 }
 
-const mockFlights: ActiveFlight[] = [
+const mockFlights: Flight[] = [
   {
     id: "1",
     flightNumber: "VN203",
-    route: "HAN → SGN",
+    departure: "HAN",
+    destination: "SGN",
+    departureTime: "08:30",
+    arrivalTime: "10:45",
     aircraft: "Boeing 787-9",
+    status: "departed",
+    gate: "A12",
     passengers: 248,
-    connectedDevices: 151,
-    bandwidth: 12.8,
-    quality: "excellent",
-    altitude: "35,000 ft",
-    speed: "850 km/h",
   },
   {
     id: "2",
     flightNumber: "VN156",
-    route: "SGN → DAD",
+    departure: "SGN",
+    destination: "DAD",
+    departureTime: "14:15",
+    arrivalTime: "15:30",
     aircraft: "Airbus A321",
+    status: "boarding",
+    gate: "B5",
     passengers: 186,
-    connectedDevices: 98,
-    bandwidth: 8.4,
-    quality: "good",
-    altitude: "32,000 ft",
-    speed: "780 km/h",
   },
   {
     id: "3",
     flightNumber: "VN412",
-    route: "HAN → PQC",
+    departure: "HAN",
+    destination: "PQC",
+    departureTime: "16:00",
+    arrivalTime: "18:15",
     aircraft: "Airbus A350",
+    status: "scheduled",
+    gate: "C8",
     passengers: 305,
-    connectedDevices: 187,
-    bandwidth: 15.2,
-    quality: "excellent",
-    altitude: "38,000 ft",
-    speed: "890 km/h",
   },
   {
     id: "4",
     flightNumber: "VN789",
-    route: "SGN → NRT",
+    departure: "SGN",
+    destination: "NRT",
+    departureTime: "22:30",
+    arrivalTime: "06:15",
     aircraft: "Boeing 787-10",
+    status: "delayed",
+    gate: "D3",
     passengers: 367,
-    connectedDevices: 215,
-    bandwidth: 10.5,
-    quality: "good",
-    altitude: "41,000 ft",
-    speed: "920 km/h",
   },
   {
     id: "5",
     flightNumber: "VN524",
-    route: "HAN → BKK",
+    departure: "HAN",
+    destination: "BKK",
+    departureTime: "09:45",
+    arrivalTime: "11:30",
     aircraft: "Airbus A321",
+    status: "arrived",
+    gate: "A7",
     passengers: 178,
-    connectedDevices: 89,
-    bandwidth: 6.8,
-    quality: "fair",
-    altitude: "36,000 ft",
-    speed: "800 km/h",
+  },
+  {
+    id: "6",
+    flightNumber: "VN301",
+    departure: "SGN",
+    destination: "HAN",
+    departureTime: "12:00",
+    arrivalTime: "14:15",
+    aircraft: "Boeing 787-9",
+    status: "scheduled",
+    gate: "B12",
+    passengers: 256,
   },
 ];
 
-const getQualityColor = (quality: string) => {
-  switch (quality) {
-    case "excellent":
-      return "success";
-    case "good":
+const getStatusColor = (status: string) => {
+  switch (status) {
+    case "departed":
       return "default";
-    case "fair":
+    case "boarding":
       return "warning";
-    case "poor":
+    case "scheduled":
+      return "default";
+    case "arrived":
+      return "success";
+    case "cancelled":
+      return "danger";
+    case "delayed":
       return "danger";
     default:
       return "default";
   }
 };
 
-const getQualityText = (quality: string) => {
-  switch (quality) {
-    case "excellent":
-      return "Xuất sắc";
-    case "good":
-      return "Tốt";
-    case "fair":
-      return "Trung bình";
-    case "poor":
-      return "Kém";
+const getStatusText = (status: string) => {
+  switch (status) {
+    case "departed":
+      return "Đã khởi hành";
+    case "boarding":
+      return "Đang lên máy bay";
+    case "scheduled":
+      return "Đã lên lịch";
+    case "arrived":
+      return "Đã đến";
+    case "cancelled":
+      return "Đã hủy";
+    case "delayed":
+      return "Trễ giờ";
     default:
-      return quality;
+      return status;
   }
 };
 
 export default function RealtimeMonitoringPage() {
   const navigate = useNavigate();
-  const [flights, setFlights] = useState(mockFlights);
-  const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [flights] = useState(mockFlights);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  // Simulate real-time updates
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFlights((prev) =>
-        prev.map((flight) => ({
-          ...flight,
-          connectedDevices: flight.connectedDevices + Math.floor(Math.random() * 5) - 2,
-          bandwidth: Math.max(5, Math.min(20, flight.bandwidth + (Math.random() - 0.5) * 2)),
-        }))
-      );
-      setLastUpdate(new Date());
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const filteredFlights = flights.filter(
+    (flight) =>
+      flight.flightNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      flight.departure.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      flight.destination.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const totalFlights = flights.length;
-  const totalPassengers = flights.reduce((sum, f) => sum + f.passengers, 0);
-  const totalDevices = flights.reduce((sum, f) => sum + f.connectedDevices, 0);
-  const avgBandwidth = (flights.reduce((sum, f) => sum + f.bandwidth, 0) / flights.length).toFixed(1);
+  const departedFlights = flights.filter((f) => f.status === "departed").length;
+  const scheduledFlights = flights.filter((f) => f.status === "scheduled").length;
+  const delayedFlights = flights.filter((f) => f.status === "delayed").length;
 
   return (
     <div className="min-h-screen bg-background pb-24 pt-6">
@@ -144,12 +155,8 @@ export default function RealtimeMonitoringPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Giám sát Real-time</h1>
-            <p className="text-muted-foreground">Theo dõi trực tiếp các chuyến bay đang hoạt động</p>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Activity className="h-4 w-4 animate-pulse text-success" />
-            <span>Cập nhật: {lastUpdate.toLocaleTimeString("vi-VN")}</span>
+            <h1 className="text-3xl font-bold text-foreground">Quản lý Chuyến Bay</h1>
+            <p className="text-muted-foreground">Danh sách tất cả các chuyến bay</p>
           </div>
         </div>
 
@@ -159,7 +166,7 @@ export default function RealtimeMonitoringPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Chuyến bay</p>
+                  <p className="text-sm text-muted-foreground mb-1">Tổng số chuyến bay</p>
                   <p className="text-3xl font-bold">{totalFlights}</p>
                 </div>
                 <Plane className="h-10 w-10 text-primary" />
@@ -171,10 +178,10 @@ export default function RealtimeMonitoringPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Hành khách</p>
-                  <p className="text-3xl font-bold">{totalPassengers.toLocaleString()}</p>
+                  <p className="text-sm text-muted-foreground mb-1">Đã khởi hành</p>
+                  <p className="text-3xl font-bold">{departedFlights}</p>
                 </div>
-                <Users className="h-10 w-10 text-primary" />
+                <Plane className="h-10 w-10 text-blue-500" />
               </div>
             </CardContent>
           </Card>
@@ -183,10 +190,10 @@ export default function RealtimeMonitoringPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Thiết bị</p>
-                  <p className="text-3xl font-bold">{totalDevices}</p>
+                  <p className="text-sm text-muted-foreground mb-1">Đã lên lịch</p>
+                  <p className="text-3xl font-bold">{scheduledFlights}</p>
                 </div>
-                <Wifi className="h-10 w-10 text-primary" />
+                <Clock className="h-10 w-10 text-green-500" />
               </div>
             </CardContent>
           </Card>
@@ -195,65 +202,141 @@ export default function RealtimeMonitoringPage() {
             <CardContent className="pt-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-muted-foreground mb-1">Băng thông TB</p>
-                  <p className="text-3xl font-bold">{avgBandwidth} Mbps</p>
+                  <p className="text-sm text-muted-foreground mb-1">Trễ giờ</p>
+                  <p className="text-3xl font-bold">{delayedFlights}</p>
                 </div>
-                <TrendingUp className="h-10 w-10 text-primary" />
+                <Clock className="h-10 w-10 text-red-500" />
               </div>
             </CardContent>
           </Card>
         </div>
 
-        {/* Active Flights Table */}
+        {/* Search Bar */}
+        <Card>
+          <CardContent className="pt-6">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <input
+                type="text"
+                placeholder="Tìm kiếm theo số hiệu chuyến bay, điểm đi, điểm đến..."
+                className="w-full pl-10 pr-4 py-3 border border-border rounded-lg bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Flights Table */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Navigation className="h-5 w-5" />
-              Chuyến bay đang hoạt động
+              <Plane className="h-5 w-5" />
+              Danh sách chuyến bay ({filteredFlights.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
+            {/* Mobile Card View */}
+            <div className="block md:hidden space-y-4">
+              {filteredFlights.map((flight) => (
+                <div key={flight.id} className="border border-border rounded-lg p-4 hover:bg-accent/50 transition-colors">
+                  <div className="flex items-start justify-between mb-3">
+                    <div>
+                      <h3 className="font-bold text-xl mb-1">{flight.flightNumber}</h3>
+                      <div className="flex items-center gap-2 text-sm">
+                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        <span className="font-medium">
+                          {flight.departure} → {flight.destination}
+                        </span>
+                      </div>
+                    </div>
+                    <Badge variant={getStatusColor(flight.status)}>{getStatusText(flight.status)}</Badge>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-3 mb-3">
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Giờ khởi hành</p>
+                      <p className="text-sm font-medium flex items-center gap-1">
+                        <Clock className="h-3 w-3" />
+                        {flight.departureTime}
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Giờ đến</p>
+                      <p className="text-sm font-medium">{flight.arrivalTime}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Máy bay</p>
+                      <p className="text-sm font-medium">{flight.aircraft}</p>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Cổng</p>
+                      <Badge variant="default" className="text-xs">{flight.gate}</Badge>
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground mb-1">Hành khách</p>
+                      <p className="text-sm font-medium">{flight.passengers}</p>
+                    </div>
+                  </div>
+
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => navigate(`/flights/${flight.id}`)}
+                  >
+                    <Eye className="h-4 w-4 mr-2" />
+                    Xem chi tiết
+                  </Button>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border">
                     <th className="text-left py-3 px-4 font-semibold">Chuyến bay</th>
-                    <th className="text-left py-3 px-4 font-semibold">Tuyến</th>
+                    <th className="text-left py-3 px-4 font-semibold">Tuyến bay</th>
+                    <th className="text-left py-3 px-4 font-semibold">Giờ bay</th>
                     <th className="text-left py-3 px-4 font-semibold">Máy bay</th>
-                    <th className="text-left py-3 px-4 font-semibold">Thiết bị</th>
-                    <th className="text-left py-3 px-4 font-semibold">Băng thông</th>
-                    <th className="text-left py-3 px-4 font-semibold">Độ cao</th>
-                    <th className="text-left py-3 px-4 font-semibold">Tốc độ</th>
-                    <th className="text-left py-3 px-4 font-semibold">Chất lượng</th>
+                    <th className="text-left py-3 px-4 font-semibold">Cổng</th>
+                    <th className="text-left py-3 px-4 font-semibold">Hành khách</th>
+                    <th className="text-left py-3 px-4 font-semibold">Trạng thái</th>
                     <th className="text-left py-3 px-4 font-semibold"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  {flights.map((flight) => (
+                  {filteredFlights.map((flight) => (
                     <tr key={flight.id} className="border-b border-border hover:bg-accent/50 transition-colors">
                       <td className="py-3 px-4">
-                        <span className="font-semibold">{flight.flightNumber}</span>
+                        <span className="font-semibold text-lg">{flight.flightNumber}</span>
                       </td>
-                      <td className="py-3 px-4">{flight.route}</td>
-                      <td className="py-3 px-4">{flight.aircraft}</td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
-                          <Users className="h-4 w-4 text-muted-foreground" />
+                          <MapPin className="h-4 w-4 text-muted-foreground" />
                           <span>
-                            {flight.connectedDevices}/{flight.passengers}
+                            {flight.departure} → {flight.destination}
                           </span>
                         </div>
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-2">
-                          <Wifi className="h-4 w-4 text-muted-foreground" />
-                          <span>{flight.bandwidth.toFixed(1)} Mbps</span>
+                          <Clock className="h-4 w-4 text-muted-foreground" />
+                          <div className="flex flex-col">
+                            <span className="text-sm">Đi: {flight.departureTime}</span>
+                            <span className="text-sm text-muted-foreground">Đến: {flight.arrivalTime}</span>
+                          </div>
                         </div>
                       </td>
-                      <td className="py-3 px-4">{flight.altitude}</td>
-                      <td className="py-3 px-4">{flight.speed}</td>
+                      <td className="py-3 px-4">{flight.aircraft}</td>
                       <td className="py-3 px-4">
-                        <Badge variant={getQualityColor(flight.quality)}>{getQualityText(flight.quality)}</Badge>
+                        <Badge variant="default">{flight.gate}</Badge>
+                      </td>
+                      <td className="py-3 px-4">{flight.passengers}</td>
+                      <td className="py-3 px-4">
+                        <Badge variant={getStatusColor(flight.status)}>{getStatusText(flight.status)}</Badge>
                       </td>
                       <td className="py-3 px-4">
                         <Button variant="outline" size="sm" onClick={() => navigate(`/flights/${flight.id}`)}>
@@ -266,6 +349,10 @@ export default function RealtimeMonitoringPage() {
                 </tbody>
               </table>
             </div>
+
+            {filteredFlights.length === 0 && (
+              <div className="text-center py-8 text-muted-foreground">Không tìm thấy chuyến bay nào</div>
+            )}
           </CardContent>
         </Card>
         <BottomNavigation />
