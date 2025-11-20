@@ -13,6 +13,12 @@ export default {
       },
     },
     extend: {
+      fontFamily: {
+        heading: ['"Be Vietnam Pro"', 'sans-serif'],
+        sans: ['Inter', 'sans-serif'],
+        body: ['Inter', 'sans-serif'],
+        metrics: ['Inter', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",

@@ -141,7 +141,12 @@
   }
 
   body {
-    @apply bg-background text-foreground font-sans;
+    @apply bg-background text-foreground font-body;
+  }
+
+  /* Font styles */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
   }
 
   /* Capacitor Safe Area Support */
@@ -169,7 +174,7 @@
   }
 
   .metric-value {
-    @apply text-3xl font-bold text-foreground;
+    @apply text-3xl font-bold text-foreground font-metrics;
   }
 
   .metric-change-positive {

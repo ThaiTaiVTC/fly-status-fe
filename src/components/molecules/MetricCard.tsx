@@ -91,22 +91,29 @@ export function MetricCard({ title, value, change, subtitle, icon, type, classNa
   const ChangeIconComponent = getChangeIcon(type);
 
   return (
-    <div className={cn("p-2.5 bg-gradient-to-br from-gray-100/60 to-gray-50/40 rounded-[1.75rem]", className)}>
-      <Card className="bg-white shadow-sm hover:shadow-md transition-all duration-300 border-0 rounded-3xl overflow-hidden">
-        <CardContent className="p-4">
+    <div className={cn("p-2 sm:p-2.5 bg-gradient-to-br from-gray-100/60 to-gray-50/40 rounded-[1.5rem] sm:rounded-[1.75rem] h-full", className)}>
+      <Card className="h-full bg-white shadow-md hover:shadow-xl transition-all duration-300 border-0 rounded-2xl sm:rounded-3xl overflow-hidden group hover:-translate-y-1">
+        <CardContent className="p-4 sm:p-5 h-full flex flex-col">
           {/* Header row: title and icon */}
-          <div className="flex items-start justify-between mb-3">
-            <h3 className="text-sm font-semibold text-gray-700">{title}</h3>
-            <div className={cn("w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0", getIconBackground(icon))}>
-              <IconComponent className={cn("h-4 w-4", getIconColor(icon))} />
+          <div className="flex items-center justify-between gap-3 mb-3 sm:mb-4">
+            <h3 className="text-xs sm:text-sm font-bold text-gray-600 uppercase tracking-wide leading-tight flex-1">{title}</h3>
+            <div
+              className={cn(
+                "w-10 h-10 sm:w-11 sm:h-11 rounded-xl sm:rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 group-hover:rotate-3 transition-all duration-300",
+                getIconBackground(icon)
+              )}
+            >
+              <IconComponent className={cn("h-5 w-5", getIconColor(icon))} />
             </div>
           </div>
 
-          {/* Value and subtitle */}
-          <div className="space-y-0.5 flex items-center justify-between">
-            <div className="text-2xl font-bold text-gray-900">{value}</div>
-            <p className=" text-gray-400">{subtitle}</p>
+          {/* Value */}
+          <div className="mb-2 flex-grow">
+            <div className="text-2xl sm:text-3xl font-extrabold text-gray-900 leading-tight break-words">{value}</div>
           </div>
+
+          {/* Subtitle */}
+          <p className="text-xs sm:text-sm font-medium text-gray-500 mt-auto">{subtitle}</p>
 
           {/* Change indicator */}
           {/* <div className={cn("flex items-center space-x-1 text-xs font-semibold mt-2", getChangeColor(type))}>

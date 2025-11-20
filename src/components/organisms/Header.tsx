@@ -1,6 +1,5 @@
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/atoms/Avatar";
 import { useAuth } from "@/context/AuthContext";
-import { Plane } from "lucide-react";
 
 interface HeaderProps {
   title?: string;
@@ -20,29 +19,23 @@ export function Header({ title = "IFC Analyst" }: HeaderProps) {
   };
 
   return (
-    <header className="bg-card border-none shadow-sm sticky top-0 z-40 safe-area-top">
-      <div className="flex items-center justify-between px-4 py-4 sm:px-6 sm:py-5">
-        {/* Logo & Title */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          <div className="p-2.5 sm:p-3 bg-primary rounded-xl shadow-md">
-            <Plane className="h-6 w-6 sm:h-7 sm:w-7 text-primary-foreground" />
-          </div>
-          <div className="flex flex-col">
-            <h1 className="text-xl sm:text-2xl font-bold text-foreground leading-tight">{title}</h1>
-            <p className="text-xs sm:text-sm text-muted-foreground leading-tight">Vietnam Airlines</p>
-          </div>
+    <header className="bg-card border-none sticky top-0 z-40 safe-area-top ">
+      <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5 max-w-7xl mx-auto">
+        {/* Title */}
+        <div className="flex-1">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">{title}</h1>
         </div>
 
         {/* User Info */}
         {user && (
-          <div className="flex items-center gap-3 sm:gap-4">
+          <div className="flex items-center gap-3 sm:gap-4 flex-shrink-0">
             <div className="hidden sm:flex flex-col items-end">
-              <p className="text-base font-semibold text-foreground leading-tight">{user.name}</p>
-              <p className="text-sm text-muted-foreground leading-tight">{user.role}</p>
+              <p className="text-sm font-semibold text-foreground">{user.name}</p>
+              <p className="text-xs text-muted-foreground">{user.role}</p>
             </div>
-            <Avatar className="h-11 w-11 sm:h-12 sm:w-12 ring-2 ring-primary/20 shadow-md">
+            <Avatar className="h-10 w-10 sm:h-11 sm:w-11 ring-2 ring-primary/10 shadow-sm">
               {user.avatar ? <AvatarImage src={user.avatar} alt={user.name} /> : null}
-              <AvatarFallback className="text-base font-semibold">{getInitials(user.name)}</AvatarFallback>
+              <AvatarFallback className="text-sm font-semibold bg-primary text-primary-foreground">{getInitials(user.name)}</AvatarFallback>
             </Avatar>
           </div>
         )}

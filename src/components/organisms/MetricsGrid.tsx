@@ -53,9 +53,18 @@ const metricsData = [
 
 export function MetricsGrid() {
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+    <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-5">
       {metricsData.map((metric, index) => (
-        <MetricCard key={index} title={metric.title} value={metric.value} change={metric.change} subtitle={metric.subtitle} icon={metric.icon} type={metric.type} />
+        <div
+          key={index}
+          className="animate-in fade-in slide-in-from-bottom-4 duration-500"
+          style={{
+            animationDelay: `${index * 100}ms`,
+            animationFillMode: "backwards",
+          }}
+        >
+          <MetricCard title={metric.title} value={metric.value} change={metric.change} subtitle={metric.subtitle} icon={metric.icon} type={metric.type} />
+        </div>
       ))}
     </div>
   );
