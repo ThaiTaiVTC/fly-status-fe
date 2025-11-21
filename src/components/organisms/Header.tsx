@@ -22,8 +22,11 @@ export function Header({ title = "IFC Analyst" }: HeaderProps) {
     <header className="bg-card border-none sticky top-0 z-40 safe-area-top ">
       <div className="flex items-center justify-between gap-4 px-4 py-4 sm:px-6 sm:py-5 max-w-7xl mx-auto">
         {/* Title */}
-        <div className="flex-1">
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">{title}</h1>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">{title}</h1>
+            <p className="text-muted-foreground">Danh sách tất cả các chuyến bay</p>
+          </div>
         </div>
 
         {/* User Info */}

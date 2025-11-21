@@ -215,6 +215,7 @@
   /* Mobile Date Picker */
   .mobile-date-picker {
     @apply max-w-full;
+    z-index: 9999 !important;
   }
 
   @media (max-width: 640px) {
